@@ -70,6 +70,7 @@ import { AttendancePasscodeModal } from "./dashboard/AttendancePasscodeModal";
 import { ExceptionRequestsList } from "./dashboard/ExceptionRequestsList";
 import { db } from "@/lib/firebaseConfig";
 import { collection, getDocs, query, where, onSnapshot, doc, getDoc } from "firebase/firestore";
+import AnalyticsSkeleton from "./AnalyticsSkeleton";
 import { getTodayKeyLocal } from "@/lib/dateUtils";
 
 const AttendanceTrendsChart = dynamic(
