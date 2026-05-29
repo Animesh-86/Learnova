@@ -29,7 +29,7 @@ import {
   Moon,
   Keyboard,
   Search,
-  MessageSquareWarning,
+  HeartPulse,
 } from "lucide-react";
 
 // ── Animation Variants ──────────────────────────────────────────────────────
@@ -85,8 +85,8 @@ function NavLink({ href, label, isActive }) {
       )}
       <span className="absolute inset-0 rounded-xl bg-zinc-200/60 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out" />
       <span className={`relative z-10 transition-colors duration-300 ${isActive
-          ? "text-blue-600 dark:text-blue-400"
-          : "text-zinc-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-300"
+        ? "text-blue-600 dark:text-blue-400"
+        : "text-zinc-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-300"
         }`}>
         {label}
       </span>
@@ -158,18 +158,18 @@ export function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-  const handleResize = () => {
-    // If the window is resized larger than mobile layouts, close the mobile menu
-    if (window.innerWidth >= 640) {
-      setIsMenuOpen(false);
-    }
-  };
+    const handleResize = () => {
+      // If the window is resized larger than mobile layouts, close the mobile menu
+      if (window.innerWidth >= 640) {
+        setIsMenuOpen(false);
+      }
+    };
 
-  window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
 
-  // ✅ Explicit arrow function hook return to safely purge registration on unmount
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+    // ✅ Explicit arrow function hook return to safely purge registration on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -210,6 +210,7 @@ export function Navbar() {
 
   const navigationItems = [
     { href: "/", label: "Home", icon: Home },
+    { href: "/wellness", label: "Wellness", icon: HeartPulse },
     { href: "/productivity", label: "Focus", icon: Sparkles },
     { href: "/activity", label: "Activities", icon: Activity },
     { href: "/complaints", label: "Complaints", icon: MessageSquareWarning },
@@ -638,8 +639,8 @@ export function Navbar() {
                         href={item.href}
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
-                            ? "bg-blue-50 dark:bg-blue-600/15 text-blue-600 dark:text-blue-400"
-                            : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-white/5"
+                          ? "bg-blue-50 dark:bg-blue-600/15 text-blue-600 dark:text-blue-400"
+                          : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-white/5"
                           }`}
                       >
                         <item.icon className={`h-4 w-4 ${isActive ? "text-blue-500" : "text-zinc-400"}`} />
