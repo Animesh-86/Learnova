@@ -1,9 +1,10 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { processSyncQueue } from "../services/syncQueue";
 import { handleOfflineRequest } from "../utils/offlineRequestHandler";
 import { getOfflineDb, clearPendingActions, getPendingActions } from "../db/offlineStore";
 
 // Mocking dependencies
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 if (typeof Response === "undefined") {
   global.Response = class Response {
     constructor(body, init) {
@@ -19,25 +20,25 @@ if (typeof Response === "undefined") {
 // For simplicity in this jest test, we can mock the offlineStore entirely,
 // but since we want to test the queue behavior, let's mock the DB functions.
 
-jest.mock("../db/offlineStore", () => {
+vi.mock("../db/offlineStore", () => {
   let store = [];
   return {
-    getOfflineDb: jest.fn(),
-    addPendingAction: jest.fn(async (action) => {
+    getOfflineDb: vi.fn(),
+    addPendingAction: vi.fn(async (action) => {
       store.push({ id: Math.random().toString(), createdAt: Date.now(), retryCount: 0, status: "pending", ...action });
     }),
-    getPendingActions: jest.fn(async () => store.filter(a => a.status === "pending")),
-    updateActionStatus: jest.fn(async (id, status, retryCount) => {
+    getPendingActions: vi.fn(async () => store.filter(a => a.status === "pending")),
+    updateActionStatus: vi.fn(async (id, status, retryCount) => {
       const idx = store.findIndex(a => a.id === id);
       if (idx > -1) {
         store[idx].status = status;
         store[idx].retryCount = retryCount;
       }
     }),
-    removePendingAction: jest.fn(async (id) => {
+    removePendingAction: vi.fn(async (id) => {
       store = store.filter(a => a.id !== id);
     }),
-    clearPendingActions: jest.fn(async () => {
+    clearPendingActions: vi.fn(async () => {
       store = [];
     })
   };
@@ -45,26 +46,27 @@ jest.mock("../db/offlineStore", () => {
 
 describe("Offline Synchronization", () => {
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     await clearPendingActions();
     
     global.CustomEvent = class CustomEvent {};
     if (typeof window !== 'undefined') {
-      window.dispatchEvent = jest.fn();
+      window.dispatchEvent = vi.fn();
     }
     
     // Mock navigator online status
     Object.defineProperty(global.navigator, 'onLine', {
       value: false,
-      writable: true
+      writable: true,
+      configurable: true
     });
     
     // Mock Service Worker
     global.navigator.serviceWorker = {
       ready: Promise.resolve({
-        sync: { register: jest.fn() }
+        sync: { register: vi.fn() }
       }),
-      controller: { postMessage: jest.fn() }
+      controller: { postMessage: vi.fn() }
     };
   });
 
